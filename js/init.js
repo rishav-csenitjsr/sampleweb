@@ -138,7 +138,7 @@
 ------------------------------------------------------*/
 
    $('form#contactForm button.submit').click(function() {
-
+      // alert("hihrdh");
       $('#image-loader').fadeIn();
 
       var contactName = $('#contactForm #contactName').val();
@@ -146,31 +146,30 @@
       var contactSubject = $('#contactForm #contactSubject').val();
       var contactMessage = $('#contactForm #contactMessage').val();
 
-      var data = 'contactName=' + contactName + '&contactEmail=' + contactEmail +
-               '&contactSubject=' + contactSubject + '&contactMessage=' + contactMessage;
+      var data = 'Name: ' + contactName + '  Email: ' + contactEmail +
+               '  Subject: ' + contactSubject + ' Message: ' + contactMessage;
 
       $.ajax({
 
 	      type: "POST",
-	      url: "inc/sendEmail.php",
-	      data: data,
-	      success: function(msg) {
-
+	      url: "https://my-portfolio-74c7c.firebaseio.com/.json",
+	      data: JSON.stringify(data),
+	      success: function (data, status, jqXHR) {
             // Message was sent
-            if (msg == 'OK') {
+            if (status == "success") {
                $('#image-loader').fadeOut();
                $('#message-warning').hide();
                $('#contactForm').fadeOut();
                $('#message-success').fadeIn();   
             }
-            // There was an error
-            else {
-               $('#image-loader').fadeOut();
-               $('#message-warning').html(msg);
-	            $('#message-warning').fadeIn();
-            }
 
-	      }
+         },
+         error: function (jqXHR, status, err) {
+            // There was an error
+               $('#image-loader').fadeOut();
+               $('#message-warning').html(jqXHR);
+	            $('#message-warning').fadeIn();
+         }
 
       });
       return false;
